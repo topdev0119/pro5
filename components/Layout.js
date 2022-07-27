@@ -69,7 +69,7 @@ const Layout = ({ children }) => {
         {head()}
         {nav()}
         <div className="container pt-5 pb-5"> {children} </div>
-    </React.Fragment>
+    </React.Fragment>;
 };
 
 export default Layout;
