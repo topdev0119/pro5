@@ -15,13 +15,13 @@ const Register = () => {
 
     const handleChange = (name) => (e) => {
         setState({ ...state, [name]: e.target.value, error: '', success: '', buttonText: 'Register' });
-    }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.table({name, email, password});
+        console.table({ name, email, password });
         
-    }
+    };
 
     const registerForm = () =>
         <form onSubmit={handleSubmit}>

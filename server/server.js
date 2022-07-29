@@ -1,14 +1,11 @@
 const express = require('express')
 
-console.log('Starting server...')
+const app = express() 
 
-const app = express()
+const authRoutes = require('./routes/auth')
 
-app.get('/api/register', (req, res) => { 
-    res.json({
-        data: 'you hit register api'
-    })
-})
+// middlewares
+app.use('/api', authRoutes)
 
 const port = process.env.PORT || 8000
 
