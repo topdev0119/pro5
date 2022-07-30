@@ -1,5 +1,9 @@
-import { useState } from 'react';
-import Layout from '../components/Layout';
+import { useState } from 'react'
+
+import Layout from '../components/Layout'
+
+import axios from 'axios'
+
 
 const Register = () => {
     const [state, setState] = useState({
@@ -9,19 +13,31 @@ const Register = () => {
         error: '',
         success: '',
         buttonText: 'Register'
-    });
+    })
 
-    const { name, email, password, error, success, buttonText } = state;
+    const { name, email, password, error, success, buttonText } = state
 
     const handleChange = (name) => (e) => {
-        setState({ ...state, [name]: e.target.value, error: '', success: '', buttonText: 'Register' });
-    };
+        setState({ ...state, [name]: e.target.value, error: '', success: '', buttonText: 'Register' })
+    }
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        console.table({ name, email, password });
-        
-    };
+        e.preventDefault()
+        // console.table({ name, email, password })
+        axios
+            .post(`http://127.0.0.1:8000/api/register`, {
+                name,
+                email,
+                password
+            })
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error => {
+                console.log(error)
+            }
+        )
+    }
 
     const registerForm = () =>
         <form onSubmit={handleSubmit}>
@@ -57,7 +73,7 @@ const Register = () => {
                     {buttonText}
                 </button>
             </div>
-        </form>;
+        </form>
 
     return <Layout>
         <div className="col-md-6 offset-md-3">
@@ -67,7 +83,7 @@ const Register = () => {
             <hr />
             {JSON.stringify(state)}
         </div>
-    </Layout>;
-};
+    </Layout>
+}
 
-export default Register;
+export default Register
