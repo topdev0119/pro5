@@ -4,6 +4,9 @@ import Layout from '../components/Layout'
 
 import axios from 'axios'
 
+import {showSuccessMessage, showErrorMessage} from '../helpers/alerts'
+
+import { API } from '../config'
 
 const Register = () => {
     const [state, setState] = useState({
@@ -24,19 +27,33 @@ const Register = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         // console.table({ name, email, password })
+        setState({ ...state, buttonText: 'Registering' })
+
         axios
-            .post(`http://127.0.0.1:8000/api/register`, {
+            .post(`${API}/register`, {
                 name,
                 email,
                 password
             })
             .then(response => {
-                console.log(response)
+                // console.log('REGISTER SUCCESS', response)
+                setState({
+                    ...state,
+                    name: '',
+                    email: '',
+                    password: '',
+                    buttonText: 'Submitted',
+                    success: response.data.message
+                })
+                
             })
             .catch(error => {
-                console.log(error)
-            }
-        )
+                setState({
+                    ...state,
+                    buttonText: 'Register',
+                    error: error.response.data.error
+                })
+            })
     }
 
     const registerForm = () =>
@@ -48,6 +65,7 @@ const Register = () => {
                     type="text"
                     className="form-control"
                     placeholder="Type your name"
+                    required
                 />
             </div>
             <div className="form-group">
@@ -57,6 +75,7 @@ const Register = () => {
                     type="email"
                     className="form-control"
                     placeholder="Type your email"
+                    required
                 />
             </div>
             <div className="form-group">
@@ -66,6 +85,7 @@ const Register = () => {
                     type="password"
                     className="form-control"
                     placeholder="Type your password"
+                    required
                 />
             </div>
             <div className="form-group">
@@ -75,15 +95,19 @@ const Register = () => {
             </div>
         </form>
 
-    return <Layout>
-        <div className="col-md-6 offset-md-3">
-            <h1>Register</h1>
-            <br />
-            {registerForm()}
-            <hr />
-            {JSON.stringify(state)}
-        </div>
-    </Layout>
+    return (
+        <Layout>
+            <div className="col-md-6 offset-md-3">
+                <h1>Register</h1>
+                <br />
+                {success && showSuccessMessage(success)}
+                {error && showErrorMessage(error)}
+                {registerForm()}
+                {/* <hr />
+                {JSON.stringify(state)} */}
+            </div>
+        </Layout>
+    )
 }
 
 export default Register
