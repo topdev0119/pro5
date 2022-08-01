@@ -58,7 +58,7 @@ const Layout = ({ children }) => {
             <li className="nav-item">
                 <Link href="/register">
                     <a className="nav-link text-dark">
-                        Login
+                        Register
                     </a>
                 </Link>
             </li>
