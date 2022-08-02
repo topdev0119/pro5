@@ -12,6 +12,8 @@ import { showSuccessMessage, showErrorMessage } from '../helpers/alerts'
 
 import { API } from '../config'
 
+import { authenticate, isAuth } from '../helpers/auth'
+
 const Login = () => {
     const [state, setState] = useState({
         email: 'colinwang14@163.com',
@@ -21,40 +23,41 @@ const Login = () => {
         buttonText: 'Login'
     })
 
+    useEffect(() => {
+        isAuth() && Router.push('/')
+    }, [])
+
+
     const { email, password, error, success, buttonText } = state
 
     const handleChange = (name) => (e) => {
         setState({ ...state, [name]: e.target.value, error: '', success: '', buttonText: 'Login' })
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async e => {
         e.preventDefault()
         // console.table({ email, password })
-        setState({ ...state, buttonText: 'Logining' })
+        setState({ ...state, buttonText: 'Logging in' })
 
-        axios
-            .post(`${API}/Login`, {
-                email,
-                password
+        try {
+            const response = await axios.post(`${API}/login`, {
+                    email,
+                    password
             })
-            .then(response => {
-                // console.log('Login SUCCESS', response)
-                setState({
-                    ...state,
-                    email: '',
-                    password: '',
-                    buttonText: 'Submitted',
-                    success: response.data.message
-                })
+                
+            // console.log('Login SUCCESS', response)
 
+            authenticate(response, () =>
+                isAuth() && isAuth().role === 'admin' ? Router.push('/admin') : Router.push('/user')
+            )
+
+        } catch (error) {
+            setState({
+                ...state,
+                buttonText: 'Login',
+                error: error.response.data.error
             })
-            .catch(error => {
-                setState({
-                    ...state,
-                    buttonText: 'Login',
-                    error: error.response.data.error
-                })
-            })
+        }
     }
 
     const LoginForm = () =>
