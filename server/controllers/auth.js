@@ -8,6 +8,8 @@ const { registerEmailParams } = require('../helpers/email')
 
 const shortId = require('shortid')
 
+const { expressjwt } = require('express-jwt')
+
 AWS.config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -117,5 +119,41 @@ exports.login = (req, res) => {
             token,
             user: { _id, name, email, role }
         })
+    })
+}
+
+exports.requireSignin = expressjwt({
+    secret: process.env.JWT_SECRET,
+    algorithms: ['HS256']
+})
+
+exports.authMiddleware = (req, res, next) => {
+    const authUserId = req.auth._id
+    User.findOne({ _id: authUserId }).exec((err, user) => {
+        if (err || !user) {
+            return res.status(400).json({
+                error: 'User not found'
+            })
+        }
+        req.profile = user
+        next()
+    })
+}
+
+exports.adminMiddleware = (req, res, next) => {
+    const adminUserId = req.auth._id
+    User.findOne({ _id: adminUserId }).exec((err, user) => {
+        if (err || !user) {
+            return res.status(400).json({
+                error: 'User not found'
+            })
+        }
+        if (user.role !== 'admin') {
+            return res.status(400).json({
+                error: 'Admin resource. Access denied'
+            })
+        }
+        req.profile = user
+        next()
     })
 }

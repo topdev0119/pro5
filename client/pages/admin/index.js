@@ -1,5 +1,5 @@
-import Layout from '../../components/Layout';
+import Layout from '../../components/Layout'
 
-const Admin = () => <Layout>hello admin!</Layout>;
+const Admin = () => <Layout>hello admin!</Layout>
 
-export default Admin;
+export default Admin

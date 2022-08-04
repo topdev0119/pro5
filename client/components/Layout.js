@@ -12,6 +12,8 @@ import { isAuth, logout } from "../helpers/auth";
 
 import 'nprogress/nprogress.css';
 
+import {useState, useEffect} from 'react';
+
 
 Router.onRouteChangeStart = url => NProgress.start()
 
@@ -23,24 +25,38 @@ const Layout = ({ children }) => {
     const head = () => (
         <React.Fragment>
             <link
+                rel="stylesheet"
+                href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+                integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+                crossOrigin="anonymous"
+            />
+            {/* <link
                 href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
                 rel="stylesheet"
                 integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
                 crossOrigin="anonymous"
-            />
-            <link 
+            /> */}
+            {/* <link 
                 rel="stylesheet" 
                 href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css"
                 integrity="sha512-42kB9yDlYiCEfx2xVwq0q7hT4uf26FUgSIZBK8uiaEnTdShXjwr8Ip1V4xGJMg3mHkUt9nNuTDxunHF0/EgxLQ==" 
                 crossOrigin="anonymous"
                 referrerPolicy="no-referrer" 
-            />
+            /> */}
             <link 
                 rel="stylesheet"
                 href="/static/css/styles.css"
             />
         </React.Fragment>
     );
+
+    const [user, setAuthUser] = useState(false)
+    
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setAuthUser(isAuth());
+        }
+    }, [])
 
     const nav = () => (
         <ul className="nav nav-tags bg-warning">
@@ -52,7 +68,7 @@ const Layout = ({ children }) => {
                 </Link>
             </li>
             {
-                !isAuth() && (
+                !user && (
                     <React.Fragment>
                         <li className="nav-item">
                             <Link href="/login">
@@ -72,29 +88,29 @@ const Layout = ({ children }) => {
                 )
             }
             {
-                isAuth() && isAuth().role === 'admin' && (
+                user && user.role === 'admin' && (
                     <li className="nav-item ml-auto">
                         <Link href="/admin">
                             <a className="nav-link text-dark">
-                                {isAuth().name}
+                                {user.name}
                             </a>
                         </Link>
                     </li>
                 )
             }
             {
-                isAuth() && isAuth().role === 'subscriber' && (
+                user && user.role === 'subscriber' && (
                     <li className="nav-item ml-auto">
                         <Link href="/user">
                             <a className="nav-link text-dark">
-                                {isAuth().name}
+                                {user.name}
                             </a>
                         </Link>
                     </li>
                 )
             }
             {
-                isAuth() && (
+                user && (
                     <li className="nav-item">
                         <a onClick={logout} className="nav-link text-dark">
                             Logout
