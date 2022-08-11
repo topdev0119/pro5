@@ -33,7 +33,6 @@ const ResetPassword = ({ router }) => {
         } catch (error) {
             // todo: redirct
             setState({ ...state, error: 'Invalid link' })
-            
         }
     }, [router])
 
