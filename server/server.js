@@ -28,7 +28,8 @@ const categoryRoutes = require('./routes/category')
 // middlewares
 app.use(morgan('dev'))
 
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: '5mb', type: 'application/json' }))
+// app.use(bodyParser.json())
 
 // app.use(cors())
 
