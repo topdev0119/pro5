@@ -25,6 +25,8 @@ const userRoutes = require('./routes/user')
 
 const categoryRoutes = require('./routes/category')
 
+const linkRoutes = require('./routes/link')
+
 // middlewares
 app.use(morgan('dev'))
 
@@ -40,6 +42,8 @@ app.use('/api', authRoutes)
 app.use('/api', userRoutes)
 
 app.use('/api', categoryRoutes)
+
+app.use('/api', linkRoutes)
 
 const port = process.env.PORT || 8000
 
