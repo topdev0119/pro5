@@ -1,6 +1,8 @@
 
 const Category = require('../models/category')
 
+const Link = require('../models/link')
+
 const slugify = require('slugify')
 
 const formidable = require('formidable')
@@ -106,7 +108,7 @@ exports.create = (req, res) => {
                 error: 'upload to s3 failed'
             })
         }
-        console.log('AWS UPLOAD RES DATA', data)
+        // console.log('AWS UPLOAD RES DATA', data)
         category.image.url = data.Location
         category.image.key = data.Key
 
@@ -139,6 +141,38 @@ exports.list = (req, res) => {
 }
 
 exports.read = (req, res) => {
+
+    const { slug } = req.params
+
+    let limit = req.body.limit ? parseInt(req.body.limit) : 10
+
+    let skip = req.body.skip ? parseInt(req.body.skip) : 0
+
+    Category.findOne({ slug })
+        .populate('postedBy', '_id name user')
+        .exec((err, category) => {
+            if (err) {
+                res.status(400).json({
+                    error: 'Could not load category'
+                })
+            }
+
+            Link.find({ categories: category })
+                .populate('postedBy', '_id name username')
+                .populate('categories', 'name')
+                .sort({ createdAt: -1 })
+                .limit(limit)
+                .skip(skip)
+                .exec((err, links) => {
+                    if (err) {
+                        res.status(400).json({
+                            error: 'Could not load links of a category'
+                        })
+                    }
+
+                    res.json({ category, links })
+                })
+        })
 
 }
 

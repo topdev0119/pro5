@@ -12,7 +12,7 @@ import { isAuth, logout } from "../helpers/auth";
 
 import 'nprogress/nprogress.css';
 
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 
 
 Router.onRouteChangeStart = url => NProgress.start()
@@ -43,7 +43,7 @@ const Layout = ({ children }) => {
                 crossOrigin="anonymous"
                 referrerPolicy="no-referrer" 
             /> */}
-            <link 
+            <link
                 rel="stylesheet"
                 href="/static/css/styles.css"
             />
@@ -51,7 +51,7 @@ const Layout = ({ children }) => {
     );
 
     const [user, setAuthUser] = useState(false)
-    
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             setAuthUser(isAuth());
@@ -64,6 +64,13 @@ const Layout = ({ children }) => {
                 <Link href="/">
                     <a className="nav-link text-dark">
                         Home
+                    </a>
+                </Link>
+            </li>
+            <li className="nav-item">
+                <Link href="/user/link/create">
+                    <a className="nav-link text-dark btn btn-success" style={{ borderRadius: '0px solid' }}>
+                        Submit a link
                     </a>
                 </Link>
             </li>
@@ -115,7 +122,7 @@ const Layout = ({ children }) => {
                         <a onClick={logout} className="nav-link text-dark">
                             Logout
                         </a>
-                    </li>                
+                    </li>
                 )
             }
         </ul>

@@ -18,13 +18,13 @@ exports.create = (req, res) => {
 
     const slug = url
 
-    let link = new Link({ title, url, type, medium, slug })
+    let link = new Link({ title, url, categories, type, medium, slug })
 
     link.postedBy = req.auth._id
 
-    let arrayOfCategories = categories && categories.split(',')
+    // let arrayOfCategories = categories && categories.split(',')
 
-    link.categories = arrayOfCategories
+    // link.categories = arrayOfCategories
 
     link.save((err, data) => {
         if (err) {
@@ -32,6 +32,7 @@ exports.create = (req, res) => {
                 error: 'link has already existed'
             })
         }
+
         res.json(data)
     })
 
@@ -51,7 +52,9 @@ exports.list = (req, res) => {
 
 exports.read = (req, res) => {
 
+
 }
+
 
 exports.update = (req, res) => {
 
